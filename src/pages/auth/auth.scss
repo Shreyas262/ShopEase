@@ -1,0 +1,243 @@
+/* ===================================
+   Auth Section
+=================================== */
+
+.login-section,
+.register-section {
+  min-height: calc(100vh - 140px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 2rem 1rem;
+
+  background: var(--background);
+}
+
+/* ===================================
+   Auth Container
+=================================== */
+
+.login-container,
+.register-container {
+  width: 100%;
+  max-width: 600px;
+
+  padding: 2rem;
+
+  background: var(--surface);
+
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-md);
+}
+
+/* ===================================
+   Auth Header
+=================================== */
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  h1 {
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+}
+
+/* ===================================
+   Forms
+=================================== */
+
+.login-form,
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  label {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+
+    background: var(--background);
+    color: var(--text);
+
+    font-size: 1rem;
+    transition: var(--transition);
+
+    &:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+  }
+
+  textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+
+  .button {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+}
+
+/* ===================================
+   Address Fieldset
+=================================== */
+
+.register-form {
+  fieldset {
+    margin: 1.75rem 0;
+    padding: 1.5rem;
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+
+    background: var(--surface);
+
+    label {
+      margin-top: 1rem;
+
+      &:first-of-type {
+        margin-top: 0;
+      }
+    }
+
+    input {
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  legend {
+    padding: 0 0.5rem;
+
+    font-size: 1rem;
+    font-weight: 600;
+
+    color: var(--text);
+  }
+}
+
+/* ===================================
+   Password Helper
+=================================== */
+
+.password-help {
+  margin-top: -0.5rem;
+
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ===================================
+   Error Message
+=================================== */
+
+.error {
+  padding: 0.75rem 1rem;
+
+  border-radius: var(--radius-md);
+
+  background: rgba(239, 68, 68, 0.12);
+  color: var(--danger);
+
+  font-size: 0.9rem;
+
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+/* ===================================
+   Auth Footer
+=================================== */
+
+.auth-footer {
+  margin-top: 2rem;
+  text-align: center;
+
+  p {
+    color: var(--text-secondary);
+  }
+
+  a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 0.25rem;
+
+    transition: var(--transition);
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+/* ===================================
+   Tablet
+=================================== */
+
+@media (min-width: 768px) {
+  .login-container,
+  .register-container {
+    padding: 2.5rem;
+  }
+
+  .register-form {
+    fieldset {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+
+      column-gap: 1.5rem;
+      row-gap: 1rem;
+
+      align-items: center;
+
+      label {
+        margin: 0;
+      }
+
+      input {
+        margin: 0;
+      }
+    }
+  }
+}
+
+/* ===================================
+   Desktop
+=================================== */
+
+@media (min-width: 1024px) {
+  .login-container,
+  .register-container {
+    max-width: 540px;
+  }
+
+  .register-container {
+    max-width: 700px;
+  }
+
+  .register-form {
+    fieldset {
+      grid-template-columns: 220px 1fr;
+    }
+  }
+}

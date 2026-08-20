@@ -1,0 +1,36 @@
+.category-card {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  text-align: center;
+}
+
+.category-image {
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+  background: var(--surface);
+  padding: 1rem;
+}
+
+.category-name {
+  padding: 1rem;
+  font-weight: 600;
+}
+
+/* ---------- Tablet ---------- */
+
+@media (min-width: 768px) {
+  .category-image {
+    height: 200px;
+  }
+}
+
+/* ---------- Desktop ---------- */
+
+@media (min-width: 1024px) {
+  .category-image {
+    height: 220px;
+  }
+}

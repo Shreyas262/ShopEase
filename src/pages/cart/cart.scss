@@ -1,0 +1,290 @@
+.cart-title {
+  margin-left: 3rem;
+}
+
+.cart-page {
+  width: min(1400px, 92%);
+  margin: 2rem auto;
+
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+
+  align-items: start;
+}
+
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.cart-item {
+  display: flex;
+  gap: 1.5rem;
+
+  padding: 1.5rem;
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+
+  background: var(--surface);
+
+  box-shadow: var(--shadow-sm);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+}
+
+.cart-image {
+  width: 140px;
+  height: 140px;
+
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+
+  background: white;
+  padding: 0.75rem;
+
+  cursor: pointer;
+}
+
+.cart-details {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+
+  h3 {
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+}
+
+.price {
+  color: var(--primary);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+
+  user-select: none;
+
+  button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 36px;
+    height: 36px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: var(--primary);
+
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: white;
+
+    cursor: pointer;
+    transition: var(--transition);
+
+    &:hover {
+      background: var(--primary-hover);
+    }
+  }
+
+  span {
+    min-width: 25px;
+
+    text-align: center;
+
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+}
+
+.cart-summary {
+  position: sticky;
+  top: 100px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  padding: 1.5rem;
+
+  background: var(--surface);
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+
+  box-shadow: var(--shadow-sm);
+
+  h2 {
+    margin-bottom: 0.5rem;
+  }
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding-bottom: 0.75rem;
+
+  border-bottom: 1px solid var(--border);
+
+  &:last-of-type {
+    border-bottom: none;
+  }
+}
+
+.summary-total {
+  margin-top: 0.5rem;
+
+  font-size: 1.3rem;
+  font-weight: 700;
+
+  color: var(--primary);
+}
+
+.checkout-btn {
+  width: 100%;
+  padding: 1rem;
+
+  border: none;
+  border-radius: var(--radius-md);
+
+  background: var(--primary);
+  color: white;
+
+  font-size: 1rem;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: var(--transition);
+
+  &:hover {
+    background: var(--primary-hover);
+  }
+}
+
+.clear-btn {
+  width: 100%;
+  padding: 0.9rem;
+
+  border: 1px solid var(--danger);
+
+  background: transparent;
+  color: var(--danger);
+
+  border-radius: var(--radius-md);
+
+  cursor: pointer;
+  transition: var(--transition);
+
+  &:hover {
+    background: var(--danger);
+    color: white;
+  }
+}
+
+.remove-btn {
+  width: fit-content;
+
+  border: none;
+
+  background: transparent;
+  color: var(--danger);
+
+  cursor: pointer;
+  font-weight: 600;
+
+  box-shadow: var(--shadow-md);
+
+  &:hover {
+    text-decoration: underline;
+    background-color: var(--danger);
+    color: var(--surface);
+  }
+}
+
+.subtotal {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* Empty Cart */
+
+.empty-cart {
+  width: min(500px, 90%);
+  margin: 6rem auto;
+
+  text-align: center;
+
+  &-icon {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+  }
+
+  p {
+    color: var(--text-secondary);
+  }
+}
+
+.continue-shopping-btn {
+  display: inline-block;
+
+  margin-top: 1.5rem;
+  padding: 0.9rem 2rem;
+
+  background: var(--primary);
+  color: white;
+
+  border-radius: var(--radius-md);
+
+  text-decoration: none;
+
+  transition: var(--transition);
+
+  &:hover {
+    background: var(--primary-hover);
+  }
+}
+
+@media (max-width: 900px) {
+  .cart-page {
+    grid-template-columns: 1fr;
+  }
+
+  .cart-item {
+    flex-direction: column;
+  }
+
+  .cart-image {
+    width: 100%;
+    height: 250px;
+  }
+
+  .cart-summary {
+    position: static;
+  }
+}

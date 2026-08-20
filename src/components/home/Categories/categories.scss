@@ -1,0 +1,32 @@
+.categories-section {
+  padding: 4rem 1rem;
+}
+
+.categories-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.categories-text {
+  text-align: center;
+
+  h2 {
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    margin-bottom: 0.75rem;
+  }
+
+  p {
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 260px));
+  justify-content: center;
+  gap: 2rem;
+}

@@ -1,0 +1,86 @@
+.features-section {
+  padding: 4rem 0;
+}
+
+.features-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.features-text {
+  text-align: center;
+
+  h2 {
+    margin-bottom: 0.75rem;
+  }
+
+  p {
+    max-width: 650px;
+    margin: 0 auto;
+  }
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.feature-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+
+.feature-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 4rem;
+  height: 4rem;
+
+  border-radius: 50%;
+
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--primary);
+
+  font-size: 1.75rem;
+}
+
+.feature-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.feature-description {
+  max-width: 280px;
+}
+
+/* ---------- Tablet ---------- */
+
+@media (min-width: 768px) {
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ---------- Desktop ---------- */
+
+@media (min-width: 1024px) {
+  .features-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ---------- Large Desktop ---------- */
+
+@media (min-width: 1440px) {
+  .features-grid {
+    gap: 2rem;
+  }
+}
