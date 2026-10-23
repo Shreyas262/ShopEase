@@ -72,8 +72,6 @@ Navbar search ─► URL query params ─► Products page ─► useGetProducts
                                          └── filter / sort / paginate (memoized)
 ```
 
-For the full design notes, see [Architecture.md](Architecture.md).
-
 ## Project Structure
 
 ```text
