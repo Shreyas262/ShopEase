@@ -209,66 +209,97 @@
   gap: 1rem;
 }
 
-.product-title {
-  font-size: 2rem;
-  line-height: 1.3;
+/* Scoped under .product-info so these don't leak onto product cards,
+   which reuse the same class names. */
+
+.product-info {
+  .product-title {
+    font-size: 2rem;
+    line-height: 1.3;
+  }
+
+  .product-price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+  }
+
+  .product-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text);
+
+    svg {
+      color: var(--warning);
+    }
+
+    span {
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+  }
+
+  .product-description {
+    line-height: 1.7;
+    color: var(--text-secondary);
+  }
+
+  .cart-btn {
+    width: fit-content;
+
+    padding: 0.9rem 2rem;
+
+    border: none;
+    border-radius: var(--radius-md);
+
+    background: var(--primary);
+    color: white;
+
+    cursor: pointer;
+    transition: var(--transition);
+
+    &:hover:not(:disabled) {
+      background: var(--primary-hover);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
 }
 
 .details-wishlist-btn {
-  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 48px;
+  height: 48px;
+  padding: 0;
+
+  border: 1px solid var(--border);
   border-radius: 50%;
 
-  background: transparent;
-
-  cursor: pointer;
-  font-size: 1.75rem;
-
-  transition: transform 0.2s ease;
-  box-shadow: var(--shadow-sm);
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: 1.25rem;
 
   &:hover {
-    transform: scale(1.1);
-    box-shadow: var(--shadow-sm);
-  }
-}
-
-.product-price {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--primary);
-}
-
-.product-rating {
-  font-size: 1.1rem;
-  color: #f59e0b;
-}
-
-.product-description {
-  line-height: 1.7;
-  color: var(--text-secondary);
-}
-
-.cart-btn {
-  width: fit-content;
-
-  padding: 0.9rem 2rem;
-
-  border: none;
-  border-radius: var(--radius-md);
-
-  background: var(--primary);
-  color: white;
-
-  cursor: pointer;
-  transition: var(--transition);
-
-  &:hover:not(:disabled) {
-    background: var(--primary-hover);
+    background: var(--surface);
+    border-color: var(--danger);
+    color: var(--danger);
   }
 
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+  &.is-active {
+    border-color: #fecaca;
+    background: #fef2f2;
+    color: var(--danger);
   }
 }
 
@@ -385,7 +416,7 @@
     align-items: center;
   }
 
-  .cart-btn {
+  .product-info .cart-btn {
     width: 100%;
   }
 }
