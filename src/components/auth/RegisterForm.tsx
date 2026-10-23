@@ -85,8 +85,10 @@ function RegisterForm() {
 
     e.preventDefault();
     const allUsers = loadUsers();
-    const emailExists = allUsers.some(user => user.email === registerState.email);
-    const phoneExists = allUsers.some(user => user.phone === registerState.phone); 
+    const email = registerState.email.trim().toLowerCase();
+    const phone = registerState.phone.trim();
+    const emailExists = allUsers.some(user => user.email.toLowerCase() === email);
+    const phoneExists = allUsers.some(user => user.phone === phone);
 
     if (emailExists) {
       setError("A user already exists with this e-mail.");
@@ -108,8 +110,10 @@ function RegisterForm() {
     const newAddress: Address = {...registerState.addresses[0], id: crypto.randomUUID()}
 
     const newUser: User = {
-      ...registerState, 
+      ...registerState,
       id: crypto.randomUUID(),
+      email,
+      phone,
       addresses: [newAddress]
     }
 
@@ -171,6 +175,8 @@ function RegisterForm() {
         inputMode="numeric"
         pattern="^[0-9]*$"
         maxLength={10}
+        minLength={10}
+        title="Enter a 10-digit phone number"
         value={registerState.phone}
         onChange={handleChange}
         required
@@ -212,7 +218,7 @@ function RegisterForm() {
           required
         />
 
-        <label htmlFor="userZipcode">Zip-code: </label>
+        <label htmlFor="address-zipcode">Zip-code: </label>
         <input
           type="text"
           name="zipcode"

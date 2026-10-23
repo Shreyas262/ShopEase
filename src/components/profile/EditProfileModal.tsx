@@ -1,6 +1,5 @@
 import {
   useState,
-  useEffect,
   type ChangeEvent,
   type FormEvent,
 } from "react";
@@ -11,6 +10,7 @@ import {
 } from "../../app-store/storeHooks";
 
 import { updateUser } from "../../app-store/slice/authSlice";
+import { loadUsers } from "../../utils/localStorage";
 import { showSuccess } from "../../utils/toast";
 
 import type { User } from "../../types/user";
@@ -27,19 +27,26 @@ function EditProfileModal({isOpen,onClose}: EditProfileModalProps) {
     (state) => state.auth.user
   );
 
+  if (!isOpen || !user) {
+    return null;
+  }
+
+  // Mounting the form only while open gives it fresh state every time.
+  return <EditProfileForm user={user} onClose={onClose} />;
+}
+
+interface EditProfileFormProps {
+  user: User;
+  onClose: () => void;
+}
+
+function EditProfileForm({ user, onClose }: EditProfileFormProps) {
   const dispatch = useAppDispatch();
 
   const [updatedUserState, setUpdatedUserState] =
-    useState<User | null>(user);
+    useState<User>(user);
 
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    if (isOpen && user) {
-      setUpdatedUserState(user);
-      setError("");
-    }
-  }, [isOpen, user]);
 
   const handleChange = (
     event: ChangeEvent<HTMLInputElement>
@@ -50,16 +57,10 @@ function EditProfileModal({isOpen,onClose}: EditProfileModalProps) {
       setError("");
     }
 
-    setUpdatedUserState((prev) => {
-      if (!prev) {
-        return prev;
-      }
-
-      return {
-        ...prev,
-        [name]: value,
-      };
-    });
+    setUpdatedUserState((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleFormSubmit = (
@@ -67,22 +68,36 @@ function EditProfileModal({isOpen,onClose}: EditProfileModalProps) {
   ) => {
     event.preventDefault();
 
+    const formattedUser: User = {
+      ...updatedUserState,
+      firstName: updatedUserState.firstName.trim(),
+      lastName: updatedUserState.lastName.trim(),
+      phone: updatedUserState.phone.trim(),
+    };
+
+    const phoneTaken = loadUsers().some(
+      (existingUser) =>
+        existingUser.id !== user.id &&
+        existingUser.phone === formattedUser.phone
+    );
+
+    if (phoneTaken) {
+      setError("A user already exists with this phone number.");
+      return;
+    }
+
     const confirmEdit = window.confirm(
       "Apply changes to your profile?"
     );
 
-    if (confirmEdit && updatedUserState) {
-      dispatch(updateUser(updatedUserState));
+    if (confirmEdit) {
+      dispatch(updateUser(formattedUser));
 
       showSuccess("Profile updated successfully.");
 
       onClose();
     }
   };
-
-  if (!isOpen || !updatedUserState) {
-    return null;
-  }
 
   return (
     <div className="edit-profile-overlay">
@@ -95,6 +110,7 @@ function EditProfileModal({isOpen,onClose}: EditProfileModalProps) {
             onClick={onClose}
             type="button"
             className="modal-close-btn"
+            aria-label="Close"
           >
             &times;
           </button>
@@ -150,7 +166,8 @@ function EditProfileModal({isOpen,onClose}: EditProfileModalProps) {
               id="userPhone"
               placeholder="e.g. 9876543210"
               inputMode="numeric"
-              pattern="^[0-9]*$"
+              pattern="^[0-9]{10}$"
+              title="Enter a 10-digit phone number"
               maxLength={10}
               minLength={10}
               value={updatedUserState.phone}
