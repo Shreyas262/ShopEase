@@ -50,8 +50,8 @@
 
 ## Phase 7 - Polish
 
-- [ ] Skeleton Loaders
-- [ ] Toast Notifications
+- [x] Skeleton Loaders
+- [x] Toast Notifications
 - [ ] Dark Mode
-- [ ] SEO
+- [x] SEO
 - [ ] Performance Optimization
