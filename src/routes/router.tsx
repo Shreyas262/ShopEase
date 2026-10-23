@@ -101,7 +101,11 @@ const router = createBrowserRouter([
 
       {
         path: "orders/:orderId",
-        Component: OrderDetails,
+        element: (
+          <ProtectedRoute>
+            <OrderDetails />
+          </ProtectedRoute>
+        ),
       },
 
       {
