@@ -4,41 +4,37 @@ import ProductCard from "../../components/product/ProductCard";
 import useSearchParamUpdater from "../../hooks/useSearchParamUpdater";
 import ProductsSkeleton from "../../components/skeletons/ProductsSkeleton";
 import SEO from "../../components/seo/SEO";
+import { formatCategoryName } from "../../utils/formatCategoryName";
 import "../../components/skeletons/skeleton.scss";
 import "./products.scss";
 
+const PRODUCTS_PER_PAGE = 12;
+
 function Products() {
-  
+
   const {
     searchText,
     selectedCategory,
     sortBy,
     currentPage,
     updateSearchParam,
+    clearFilters,
   } = useSearchParamUpdater();
-
-  const productsPerPage = 12;
 
   const {
     data: productsData,
     isLoading,
     isError,
-    
+    refetch,
   } = useGetProductsQuery();
 
-  if (isLoading) {
-    return <ProductsSkeleton />;
-  }
-
-  if (isError) {
-    return <p>Something went wrong while loading products.</p>;
-  }
-
-  if (!productsData) {
-    return null;
-  }
-
+  // Hooks must run on every render, so they come before the early returns
+  // and handle the "no data yet" case themselves.
   const categories = useMemo(() => {
+    if (!productsData) {
+      return ["All"];
+    }
+
     const allCategories = [
       ...new Set(
         productsData.products.map(
@@ -51,15 +47,19 @@ function Products() {
   }, [productsData]);
 
   const filteredProducts = useMemo(() => {
+    if (!productsData) {
+      return [];
+    }
+
     let filtered = productsData.products;
 
-    if (searchText.trim()) {
+    const query = searchText.trim().toLowerCase();
+
+    if (query) {
       filtered = filtered.filter((product) =>
         product.title
           .toLowerCase()
-          .includes(
-            searchText.toLowerCase()
-          )
+          .includes(query)
       );
     }
 
@@ -96,32 +96,62 @@ function Products() {
     }
 
     return sorted;
-    }, [
-      productsData,
-      searchText,
-      selectedCategory,
-      sortBy,
-    ]);
+  }, [
+    productsData,
+    searchText,
+    selectedCategory,
+    sortBy,
+  ]);
+
+  if (isLoading) {
+    return <ProductsSkeleton />;
+  }
+
+  if (isError) {
+    return (
+      <div className="products-page">
+        <div className="state-message">
+          <h2>Couldn't load products</h2>
+          <p>Something went wrong while loading products.</p>
+          <button
+            type="button"
+            className="button"
+            onClick={() => refetch()}
+          >
+            Try again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!productsData) {
+    return null;
+  }
 
   const totalPages = Math.max(
     1,
     Math.ceil(
       filteredProducts.length /
-        productsPerPage
+        PRODUCTS_PER_PAGE
     )
   );
 
-  const startIndex =
-    (currentPage - 1) * productsPerPage;
+  // Out-of-range page numbers in the URL fall back to the nearest valid page.
+  const page = Math.min(currentPage, totalPages);
 
-  const endIndex =
-    startIndex + productsPerPage;
+  const startIndex =
+    (page - 1) * PRODUCTS_PER_PAGE;
 
   const paginatedProducts =
     filteredProducts.slice(
       startIndex,
-      endIndex
+      startIndex + PRODUCTS_PER_PAGE
     );
+
+  const hasActiveFilters =
+    searchText.trim() !== "" ||
+    selectedCategory !== "All";
 
   const handleCategoryClick = (
     category: string
@@ -141,26 +171,9 @@ function Products() {
     );
   };
 
-  const handleNextPage = () => {
-    if (currentPage >= totalPages) {
-      return;
-    }
-
-    updateSearchParam(
-      "page",
-      currentPage + 1
-    );
-  };
-
-  const handlePreviousPage = () => {
-    if (currentPage <= 1) {
-      return;
-    }
-
-    updateSearchParam(
-      "page",
-      currentPage - 1
-    );
+  const goToPage = (nextPage: number) => {
+    updateSearchParam("page", nextPage);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -169,6 +182,24 @@ function Products() {
         title="Products"
         description="Browse products by category."
       />
+
+      <div className="products-heading">
+        <h1>
+          {selectedCategory === "All"
+            ? "All Products"
+            : formatCategoryName(selectedCategory)}
+        </h1>
+
+        <p className="results-count">
+          {filteredProducts.length}{" "}
+          {filteredProducts.length === 1
+            ? "product"
+            : "products"}
+          {searchText.trim() && (
+            <> for “{searchText.trim()}”</>
+          )}
+        </p>
+      </div>
 
       <div className="filter-section">
 
@@ -182,25 +213,36 @@ function Products() {
                   category
                 )
               }
+              aria-pressed={selectedCategory === category}
               className={
                 selectedCategory === category
                   ? "category-btn active-category"
                   : "category-btn"
               }
             >
-              {category}
+              {category === "All"
+                ? category
+                : formatCategoryName(category)}
             </button>
           ))}
         </div>
 
         <div className="sort-container">
+          <label
+            htmlFor="sort-select"
+            className="visually-hidden"
+          >
+            Sort products
+          </label>
+
           <select
+            id="sort-select"
             value={sortBy}
             onChange={handleSortChange}
             className="sort-select"
           >
             <option value="default">
-              Default
+              Sort: Featured
             </option>
 
             <option value="price-asc">
@@ -212,50 +254,69 @@ function Products() {
             </option>
 
             <option value="rating">
-              Rating
+              Top Rated
             </option>
           </select>
         </div>
 
       </div>
 
-      <div className="products-grid">
-        {paginatedProducts.map(
-          (product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              variant="detailed"
-            />
-          )
-        )}
-      </div>
+      {paginatedProducts.length === 0 ? (
+        <div className="state-message">
+          <h2>No products found</h2>
+          <p>Try a different search term or category.</p>
+          {hasActiveFilters && (
+            <button
+              type="button"
+              className="button"
+              onClick={clearFilters}
+            >
+              Clear filters
+            </button>
+          )}
+        </div>
+      ) : (
+        <div className="products-grid">
+          {paginatedProducts.map(
+            (product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                variant="detailed"
+              />
+            )
+          )}
+        </div>
+      )}
 
-      <div className="pagination">
-
-        <button
-          type="button"
-          onClick={handlePreviousPage}
-          disabled={currentPage === 1}
+      {totalPages > 1 && (
+        <nav
+          className="pagination"
+          aria-label="Pagination"
         >
-          Previous
-        </button>
 
-        <span>
-          Page {currentPage} of {totalPages}
-        </span>
+          <button
+            type="button"
+            onClick={() => goToPage(page - 1)}
+            disabled={page === 1}
+          >
+            Previous
+          </button>
 
-        <button
-          type="button"
-          onClick={handleNextPage}
-          disabled={
-            currentPage === totalPages
-          }
-        >
-          Next
-        </button>
+          <span>
+            Page {page} of {totalPages}
+          </span>
 
-      </div>
+          <button
+            type="button"
+            onClick={() => goToPage(page + 1)}
+            disabled={page === totalPages}
+          >
+            Next
+          </button>
+
+        </nav>
+      )}
     </div>
   );
 }
