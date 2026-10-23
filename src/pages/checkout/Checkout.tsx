@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { useAppDispatch, useAppSelector } from "../../app-store/storeHooks";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 import AddressSelector from "../../components/checkout/AddressSelector";
 import OrderSummary from "../../components/checkout/OrderSummary";
@@ -46,14 +46,14 @@ function Checkout() {
     return null;
   }
 
+  // Nothing to check out: send the user back to their (empty) cart.
+  if (cartItems.length === 0) {
+    return <Navigate to="/cart" replace />;
+  }
+
   const handlePlaceOrder = () => {
     if (!selectedAddress) {
-      setError("Please select an address");
-      return;
-    }
-
-    if (cartItems.length === 0) {
-      alert("Your cart is empty");
+      setError("Please select a delivery address.");
       return;
     }
 
@@ -74,15 +74,18 @@ function Checkout() {
 
     addOrder(user.id, order);
 
-    dispatch(clearCart());
-
-    showSuccess("Order placed successfully.");
-
+    // Navigate before clearing the cart so the empty-cart redirect above
+    // never wins the race.
     navigate("/order-confirmation", {
+      replace: true,
       state: {
         orderId: order.id,
       },
     });
+
+    dispatch(clearCart());
+
+    showSuccess("Order placed successfully.");
   };
 
   return (
@@ -109,7 +112,10 @@ function Checkout() {
 
           <AddressSelector
             selectedAddress={selectedAddress}
-            onSelect={setSelectedAddress}
+            onSelect={(address) => {
+              setSelectedAddress(address);
+              setError("");
+            }}
           />
 
           <PaymentMethod
