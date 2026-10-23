@@ -42,12 +42,18 @@ function Checkout() {
 
   const [error, setError] = useState("");
 
+  // Decided once, on arrival: placing an order empties the cart too, and that
+  // must not bounce the user to /cart instead of the confirmation page.
+  const [arrivedWithEmptyCart] = useState(
+    cartItems.length === 0
+  );
+
   if (!user) {
     return null;
   }
 
   // Nothing to check out: send the user back to their (empty) cart.
-  if (cartItems.length === 0) {
+  if (arrivedWithEmptyCart) {
     return <Navigate to="/cart" replace />;
   }
 
@@ -74,8 +80,6 @@ function Checkout() {
 
     addOrder(user.id, order);
 
-    // Navigate before clearing the cart so the empty-cart redirect above
-    // never wins the race.
     navigate("/order-confirmation", {
       replace: true,
       state: {
