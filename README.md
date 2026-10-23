@@ -2,9 +2,13 @@
 
 A responsive e-commerce storefront built with **React 19**, **TypeScript**, **Redux Toolkit**, **RTK Query**, and **SCSS**. It covers the whole shopping flow: browsing and searching the catalog, cart and wishlist, checkout, order history, and account management.
 
-> **Live demo:** _add link_ &nbsp;·&nbsp; **Repository:** [github.com/Shreyas262/ShopEase](https://github.com/Shreyas262/ShopEase)
+> **Live demo:** [shopease-e-commerce-platform.netlify.app](https://shopease-e-commerce-platform.netlify.app) &nbsp;·&nbsp; **Repository:** [github.com/Shreyas262/ShopEase](https://github.com/Shreyas262/ShopEase)
 
 ![ShopEase home page](docs/screenshots/home.png)
+
+| Catalog | Product details |
+|---|---|
+| ![Product catalog with category filters](docs/screenshots/products.png) | ![Product details page](docs/screenshots/product-details.png) |
 
 ---
 
