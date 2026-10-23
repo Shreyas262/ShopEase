@@ -27,6 +27,7 @@ interface SearchParamUpdaterReturn {
     key: SearchParamKey,
     value: SearchParamValue
   ) => void;
+  clearFilters: () => void;
 }
 
 function useSearchParamUpdater(): SearchParamUpdaterReturn {
@@ -49,8 +50,13 @@ function useSearchParamUpdater(): SearchParamUpdaterReturn {
       ? rawSort
       : "default";
 
+  const rawPage = Number(searchParams.get("page"));
+
+  // Anything that isn't a positive whole number (e.g. "-1", "1.5", "abc") means page 1.
   const currentPage =
-    Number(searchParams.get("page")) || 1;
+    Number.isInteger(rawPage) && rawPage > 0
+      ? rawPage
+      : 1;
 
   const updateSearchParam = (
     key: SearchParamKey,
@@ -85,12 +91,25 @@ function useSearchParamUpdater(): SearchParamUpdaterReturn {
     setSearchParams(params);
   };
 
+  const clearFilters = (): void => {
+    const params = new URLSearchParams(
+      searchParams
+    );
+
+    params.delete("search");
+    params.delete("category");
+    params.delete("page");
+
+    setSearchParams(params);
+  };
+
   return {
     searchText,
     selectedCategory,
     sortBy,
     currentPage,
     updateSearchParam,
+    clearFilters,
   };
 }
 

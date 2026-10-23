@@ -89,6 +89,7 @@ function AddressSelector({
         onClose={handleCloseModal}
         mode="add"
         address={null}
+        onSaved={onSelect}
       />
     </div>
   );

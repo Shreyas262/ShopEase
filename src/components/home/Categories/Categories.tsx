@@ -1,8 +1,14 @@
+import { Link } from "react-router-dom";
+
 import CategoryCard from "./CategoryCard";
 
 import { getCategoryData } from "../../../utils/getCategoryData";
+import "../../skeletons/skeleton.scss";
 import "./categories.scss"
 import { useGetProductsQuery } from "../../../app-store/shopApi";
+
+// Show a curated handful on the home page; the full list lives on /products.
+const HOME_CATEGORY_LIMIT = 8;
 
 function Categories() {
   const {
@@ -11,26 +17,15 @@ function Categories() {
     isError,
   } = useGetProductsQuery()
 
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
   if (isError) {
-    return (
-      <p>
-        Error fetching categories.
-      </p>
-    );
-  }
-
-  if (!productsData) {
     return null;
   }
 
-  const categoryData =
-    getCategoryData(
-      productsData.products
-    );
+  const categoryData = productsData
+    ? getCategoryData(
+        productsData.products
+      ).slice(0, HOME_CATEGORY_LIMIT)
+    : [];
 
   return (
     <section
@@ -39,7 +34,7 @@ function Categories() {
     >
       <div className="container categories-container">
 
-        <div className="categories-text">
+        <div className="section-heading">
           <h2>Browse by Category</h2>
 
           <p>
@@ -49,14 +44,34 @@ function Categories() {
         </div>
 
         <div className="categories-grid">
-          {categoryData.map(
-            (category) => (
-              <CategoryCard
-                key={category.slug}
-                category={category}
-              />
-            )
-          )}
+          {isLoading
+            ? Array.from({ length: HOME_CATEGORY_LIMIT }).map(
+                (_, index) => (
+                  <div
+                    key={index}
+                    className="category-card card skeleton-card"
+                  >
+                    <div className="skeleton skeleton-category-image" />
+                  </div>
+                )
+              )
+            : categoryData.map(
+                (category) => (
+                  <CategoryCard
+                    key={category.slug}
+                    category={category}
+                  />
+                )
+              )}
+        </div>
+
+        <div className="categories-action">
+          <Link
+            to="/products"
+            className="button"
+          >
+            Browse all categories
+          </Link>
         </div>
 
       </div>

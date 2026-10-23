@@ -1,6 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useAppDispatch } from "../../app-store/storeHooks";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { login } from "../../app-store/slice/authSlice";
 import { loadCart, loadUsers, loadWishlist } from "../../utils/localStorage";
 import { setCart } from "../../app-store/slice/cartSlice";
@@ -23,6 +23,11 @@ function LoginForm() {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // ProtectedRoute passes the page the user was trying to reach.
+  const redirectTo =
+    (location.state as { from?: string } | null)?.from ?? "/";
   const dispatch = useAppDispatch();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -40,16 +45,12 @@ function LoginForm() {
     e.preventDefault();
     
     const allUsers = loadUsers();
-    const user = allUsers.find(u => u.email === loginState.email)
-    
-    if (!user) {
+    const email = loginState.email.trim().toLowerCase();
+    const user = allUsers.find(u => u.email.toLowerCase() === email)
+
+    if (!user || user.password !== loginState.password) {
       setError("Invalid e-mail or password")
       showError("Invalid e-mail or password")
-      return;
-    }
-
-    if (user.password !== loginState.password) {
-      setError("Invalid e-mail or password");
       return;
     }
 
@@ -59,7 +60,7 @@ function LoginForm() {
 
     setLoginState(initialLoginState)
     showSuccess(`Welcome back, ${user.firstName}!`);
-    navigate("/");
+    navigate(redirectTo, { replace: true });
   }
 
   return (

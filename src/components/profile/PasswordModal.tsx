@@ -1,5 +1,4 @@
 import {
-  useEffect,
   useState,
   type ChangeEvent,
   type FormEvent,
@@ -12,6 +11,8 @@ import {
 
 import { updateUser } from "../../app-store/slice/authSlice";
 import { showSuccess } from "../../utils/toast";
+
+import type { User } from "../../types/user";
 
 interface PasswordModalProps {
   isOpen: boolean;
@@ -35,11 +36,28 @@ function PasswordModal({
   onClose,
   isOpen,
 }: PasswordModalProps) {
-  const dispatch = useAppDispatch();
-
   const user = useAppSelector(
     (state) => state.auth.user
   );
+
+  if (!isOpen || !user) {
+    return null;
+  }
+
+  // Mounting the form only while open gives it fresh state every time.
+  return <PasswordForm user={user} onClose={onClose} />;
+}
+
+interface PasswordFormProps {
+  user: User;
+  onClose: () => void;
+}
+
+function PasswordForm({
+  user,
+  onClose,
+}: PasswordFormProps) {
+  const dispatch = useAppDispatch();
 
   const [passwordState, setPasswordState] =
     useState<PasswordFormState>(
@@ -47,19 +65,6 @@ function PasswordModal({
     );
 
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    if (isOpen) {
-      setPasswordState(
-        createEmptyPasswordState()
-      );
-      setError("");
-    }
-  }, [isOpen]);
-
-  if (!isOpen || !user) {
-    return null;
-  }
 
   const handleChange = (
     event: ChangeEvent<HTMLInputElement>

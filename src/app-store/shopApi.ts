@@ -9,9 +9,10 @@ const shopApi = createApi({
     tagTypes: ["Product"],
     endpoints: (builder) => ({
         getProducts: builder.query<ProductsResponse, void>({
-            query: () => "/products",
+            // DummyJSON returns only 30 items by default; limit=0 returns the full catalog.
+            query: () => "/products?limit=0",
             providesTags: (result) => result ? [
-                            ...result?.products.map(({ id }) => ({ type: "Product" as const, id })),
+                            ...result.products.map(({ id }) => ({ type: "Product" as const, id })),
                             {type: "Product" as const, id: "LIST"}
                         ] :
                         [{type: "Product" as const, id: "LIST"}],

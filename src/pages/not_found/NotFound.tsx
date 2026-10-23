@@ -1,20 +1,24 @@
 import { Link } from "react-router-dom"
 import SEO from "../../components/seo/SEO"
+import "./notFound.scss"
 
 function NotFound() {
   return (
-    <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "10%"}}>
+    <main className="not-found">
       <SEO
           title="Page Not Found"
           description="The page you're looking for doesn't exist or has been moved."
       />
-      <h1>Page not found</h1><br />
-      <p>The page you are looking for doesn't exist or has been moved.</p><br />
-      <div>
-        <p><Link to={"/"} className="button">Click here</Link>
-        <span> to return to the home page</span></p>
+
+      <p className="not-found-code">404</p>
+      <h1>Page not found</h1>
+      <p>The page you are looking for doesn't exist or has been moved.</p>
+
+      <div className="not-found-actions">
+        <Link to="/" className="button">Back to home</Link>
+        <Link to="/products" className="not-found-secondary">Browse products</Link>
       </div>
-    </div>
+    </main>
   )
 }
 

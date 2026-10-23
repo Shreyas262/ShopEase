@@ -5,6 +5,7 @@ button {
   padding: 0.75rem 1.5rem;
   background: var(--primary);
   color: white;
+  font-weight: 500;
   transition: var(--transition);
 
   &:hover {
@@ -15,6 +16,13 @@ button {
     cursor: not-allowed;
     opacity: 0.6;
   }
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .card {
@@ -32,4 +40,71 @@ button {
 .container {
   width: min(1400px, 92%);
   margin: 0 auto;
+}
+
+/* Shared by the empty cart and empty wishlist pages. */
+.continue-shopping-btn {
+  display: inline-block;
+
+  margin-top: 1.5rem;
+  padding: 0.9rem 2rem;
+
+  background: var(--primary);
+  color: white;
+
+  border-radius: var(--radius-md);
+
+  transition: var(--transition);
+
+  &:hover {
+    background: var(--primary-hover);
+  }
+}
+
+/* Centered message for empty, error and not-found states. */
+.state-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+
+  max-width: 480px;
+  margin: 3rem auto;
+  padding: 3rem 2rem;
+
+  text-align: center;
+
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+
+  .state-icon {
+    font-size: 2.5rem;
+    color: var(--text-secondary);
+  }
+
+  h1,
+  h2 {
+    color: var(--text);
+  }
+
+  .button {
+    margin-top: 0.5rem;
+  }
+}
+
+.section-heading {
+  text-align: center;
+
+  h2 {
+    font-size: clamp(1.75rem, 4vw, 2.25rem);
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+  }
+
+  p {
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
 }

@@ -12,6 +12,8 @@ import {
   clearCart,
 } from "../../app-store/slice/cartSlice";
 
+import { FiTrash2 } from "react-icons/fi";
+
 import { showInfo } from "../../utils/toast";
 import SEO from "../../components/seo/SEO";
 
@@ -166,6 +168,7 @@ function Cart() {
                     );
                   }}
                 >
+                  <FiTrash2 aria-hidden="true" />
                   Remove
                 </button>
 

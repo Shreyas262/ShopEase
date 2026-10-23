@@ -55,7 +55,7 @@ function Features() {
 
       <div className="container features-container">
 
-        <div className="features-text">
+        <div className="section-heading">
 
           <h2>Why Choose Us</h2>
 

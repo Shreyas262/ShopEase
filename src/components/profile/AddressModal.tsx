@@ -1,5 +1,4 @@
 import {
-  useEffect,
   useState,
   type ChangeEvent,
   type FormEvent,
@@ -14,12 +13,14 @@ import { updateUser } from "../../app-store/slice/authSlice";
 import { showSuccess } from "../../utils/toast";
 
 import type { Address } from "../../types/address";
+import type { User } from "../../types/user";
 
 interface AddressModalProps {
   isOpen: boolean;
   onClose: () => void;
   mode: "add" | "edit";
   address: Address | null;
+  onSaved?: (address: Address) => void;
 }
 
 const createEmptyAddress = (): Address => ({
@@ -32,38 +33,47 @@ const createEmptyAddress = (): Address => ({
 
 function AddressModal({
   isOpen,
-  onClose,
-  mode,
-  address,
+  ...formProps
 }: AddressModalProps) {
-  const dispatch = useAppDispatch();
-
   const currentUser = useAppSelector(
     (state) => state.auth.user
   );
 
-  const [addressState, setAddressState] =
-    useState<Address>(createEmptyAddress());
-
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
-
-    if (mode === "edit" && address) {
-      setAddressState(address);
-    } else {
-      setAddressState(createEmptyAddress());
-    }
-
-    setError("");
-  }, [isOpen, mode, address]);
-
   if (!currentUser || !isOpen) {
     return null;
   }
+
+  // Mounting the form only while open gives it fresh state every time.
+  return (
+    <AddressForm
+      currentUser={currentUser}
+      {...formProps}
+    />
+  );
+}
+
+interface AddressFormProps
+  extends Omit<AddressModalProps, "isOpen"> {
+  currentUser: User;
+}
+
+function AddressForm({
+  currentUser,
+  onClose,
+  mode,
+  address,
+  onSaved,
+}: AddressFormProps) {
+  const dispatch = useAppDispatch();
+
+  const [addressState, setAddressState] =
+    useState<Address>(() =>
+      mode === "edit" && address
+        ? address
+        : createEmptyAddress()
+    );
+
+  const [error, setError] = useState("");
 
   const addresses = currentUser.addresses;
 
@@ -148,6 +158,8 @@ function AddressModal({
         addresses: updatedAddresses,
       })
     );
+
+    onSaved?.(formattedAddress);
 
     onClose();
 

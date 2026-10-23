@@ -17,9 +17,13 @@ import {
   useAppSelector,
 } from "../../app-store/storeHooks";
 
+import { FaHeart, FaStar } from "react-icons/fa";
+import { FiHeart } from "react-icons/fi";
+
 import ProductDetailsSkeleton from "../../components/skeletons/ProductDetailsSkeleton";
 
 import { showInfo, showSuccess } from "../../utils/toast";
+import { formatCategoryName } from "../../utils/formatCategoryName";
 import SEO from "../../components/seo/SEO";
 
 import "./productDetails.scss";
@@ -282,14 +286,24 @@ function ProductDetails() {
           {isAuthenticated && (
             <button
               type="button"
-              className="details-wishlist-btn"
+              className={
+                isWishlisted
+                  ? "details-wishlist-btn is-active"
+                  : "details-wishlist-btn"
+              }
               onClick={
                 handleWishlistToggle
               }
+              aria-pressed={isWishlisted}
+              aria-label={
+                isWishlisted
+                  ? "Remove from wishlist"
+                  : "Add to wishlist"
+              }
             >
               {isWishlisted
-                ? "❤️"
-                : "🤍"}
+                ? <FaHeart />
+                : <FiHeart />}
             </button>
           )}
 
@@ -300,11 +314,13 @@ function ProductDetails() {
         </p>
 
         <p className="product-price">
-          ${productDetails.price}
+          ${productDetails.price.toFixed(2)}
         </p>
 
         <p className="product-rating">
-          ⭐ {productDetails.rating}
+          <FaStar aria-hidden="true" />
+          {productDetails.rating.toFixed(1)}
+          <span>/ 5</span>
         </p>
 
         <button
@@ -335,7 +351,7 @@ function ProductDetails() {
 
             <dt>Category</dt>
             <dd>
-              {productDetails.category}
+              {formatCategoryName(productDetails.category)}
             </dd>
 
             <dt>Weight</dt>

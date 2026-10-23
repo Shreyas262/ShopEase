@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 import ProductCard from "../../product/ProductCard";
+import ProductCardSkeleton from "../../skeletons/ProductCardSkeleton";
 
 import "./featuredProducts.scss";
 import { useGetProductsQuery } from "../../../app-store/shopApi";
@@ -12,48 +13,55 @@ function FeaturedProducts() {
     isError,
   } = useGetProductsQuery();
 
-  if (isLoading) {
-    return <p>Loading</p>;
-  }
-
   if (isError) {
     return (
-      <p>
-        Error while fetching products.
-      </p>
+      <section className="featured-products-section">
+        <div className="container">
+          <div className="state-message">
+            <h2>Couldn't load featured products</h2>
+            <p>Please check your connection and try again.</p>
+          </div>
+        </div>
+      </section>
     );
   }
 
-  if (!productsData) {
-    return null;
-  }
-
-  const featuredProducts =
-    productsData.products.slice(0, 8);
+  // Top-rated products make a better showcase than the first few in the catalog.
+  const featuredProducts = productsData
+    ? [...productsData.products]
+        .sort((a, b) => b.rating - a.rating)
+        .slice(0, 8)
+    : [];
 
   return (
     <section className="featured-products-section">
       <div className="container featured-products-container">
 
-        <div className="featured-products-text">
+        <div className="section-heading">
           <h2>Featured Products</h2>
 
           <p>
-            Discover our most popular products,
-            handpicked just for you.
+            Our highest-rated products,
+            loved by shoppers like you.
           </p>
         </div>
 
         <div className="featured-products-grid">
-          {featuredProducts.map(
-            (product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                variant="compact"
-              />
-            )
-          )}
+          {isLoading
+            ? Array.from({ length: 8 }).map(
+                (_, index) => (
+                  <ProductCardSkeleton key={index} />
+                )
+              )
+            : featuredProducts.map(
+                (product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    variant="detailed"
+                  />
+                )
+              )}
         </div>
 
         <div className="featured-products-action">
