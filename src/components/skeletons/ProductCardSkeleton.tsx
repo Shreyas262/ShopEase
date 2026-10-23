@@ -6,7 +6,7 @@ function ProductCardSkeleton() {
 
       <div className="skeleton skeleton-image" />
 
-      <div className="product-info">
+      <div className="product-content">
 
         <div className="skeleton skeleton-title" />
 

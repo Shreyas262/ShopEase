@@ -8,19 +8,6 @@
   gap: 2.5rem;
 }
 
-.featured-products-text {
-  text-align: center;
-
-  h2 {
-    margin-bottom: 0.75rem;
-  }
-
-  p {
-    max-width: 600px;
-    margin: 0 auto;
-  }
-}
-
 .featured-products-grid {
   display: grid;
   grid-template-columns: 1fr;

@@ -3,9 +3,9 @@ import './skeleton.scss'
 
 function ProductsSkeleton() {
   return (
-    <section className="products-section">
+    <section className="products-page">
 
-      <div className="products-header">
+      <div className="products-heading">
         <div className="skeleton skeleton-search" />
       </div>
 

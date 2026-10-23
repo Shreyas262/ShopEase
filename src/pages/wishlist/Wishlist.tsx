@@ -20,6 +20,8 @@ import {
   showInfo,
 } from "../../utils/toast";
 
+import { FiTrash2 } from "react-icons/fi";
+
 import SEO from "../../components/seo/SEO";
 
 import "./wishlist.scss";
@@ -103,42 +105,26 @@ function Wishlist() {
           );
 
           return (
-            <div
+            <article
               key={product.id}
               className="wishlist-card"
             >
-              <img
-                src={product.thumbnail}
-                alt={product.title}
-                className="wishlist-image"
-                onClick={() =>
-                  handleItemClick(product.id)
-                }
-              />
-
-              <h3
-                className="wishlist-title"
-                onClick={() =>
-                  handleItemClick(product.id)
-                }
-              >
-                {product.title}
-              </h3>
-
-              <p className="wishlist-price">
-                ${product.price}
-              </p>
-
-              <div className="wishlist-actions">
-                <Link
-                  to={`/products/${product.id}`}
-                  className="details-btn"
-                >
-                  View Details
-                </Link>
+              <div className="wishlist-image-wrap">
+                <img
+                  src={product.thumbnail}
+                  alt={product.title}
+                  className="wishlist-image"
+                  loading="lazy"
+                  onClick={() =>
+                    handleItemClick(product.id)
+                  }
+                />
 
                 <button
                   type="button"
+                  className="wishlist-remove-btn"
+                  aria-label={`Remove ${product.title} from wishlist`}
+                  title="Remove from wishlist"
                   onClick={() => {
                     dispatch(
                       removeFromWishlist(product.id)
@@ -148,29 +134,49 @@ function Wishlist() {
                       `${product.title} removed from wishlist.`
                     );
                   }}
-                  className="remove-btn"
                 >
-                  Remove
-                </button>
-
-                <button
-                  type="button"
-                  disabled={isInCart}
-                  onClick={() => {
-                    dispatch(addToCart(product));
-
-                    showSuccess(
-                      `${product.title} added to cart.`
-                    );
-                  }}
-                  className="cart-btn"
-                >
-                  {isInCart
-                    ? "Already in Cart"
-                    : "Add to Cart"}
+                  <FiTrash2 aria-hidden="true" />
                 </button>
               </div>
-            </div>
+
+              <div className="wishlist-body">
+                <h3 className="wishlist-title">
+                  <Link to={`/products/${product.id}`}>
+                    {product.title}
+                  </Link>
+                </h3>
+
+                <p className="wishlist-price">
+                  ${product.price.toFixed(2)}
+                </p>
+
+                <div className="wishlist-actions">
+                  <Link
+                    to={`/products/${product.id}`}
+                    className="wishlist-details-btn"
+                  >
+                    View Details
+                  </Link>
+
+                  <button
+                    type="button"
+                    disabled={isInCart}
+                    onClick={() => {
+                      dispatch(addToCart(product));
+
+                      showSuccess(
+                        `${product.title} added to cart.`
+                      );
+                    }}
+                    className="wishlist-cart-btn"
+                  >
+                    {isInCart
+                      ? "In Cart"
+                      : "Add to Cart"}
+                  </button>
+                </div>
+              </div>
+            </article>
           );
         })}
       </div>

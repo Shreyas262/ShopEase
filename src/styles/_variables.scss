@@ -2,6 +2,7 @@
   /* Brand */
   --primary: #2563eb;
   --primary-hover: #1d4ed8;
+  --primary-soft: #eff4ff;
 
   /* Status */
   --success: #16a34a;
@@ -11,21 +12,33 @@
   /* Neutral */
   --background: #f8fafc;
   --surface: #ffffff;
+  --surface-secondary: #f1f5f9;
 
-  --text: #1f2937;
-  --text-secondary: #6b7280;
+  --text: #0f172a;
+  --text-primary: var(--text);
+  --text-secondary: #64748b;
 
-  --border: #e5e7eb;
+  --border: #e2e8f0;
 
   /* Radius */
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;
+  --radius-pill: 999px;
 
   /* Shadow */
-  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.12);
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.1);
+  --shadow-lg: 0 20px 48px rgba(15, 23, 42, 0.18);
+
+  /* Focus */
+  --focus-ring: 0 0 0 3px rgba(37, 99, 235, 0.25);
 
   /* Transition */
-  --transition: transform 0.25s ease, box-shadow 0.25s ease;
+  --transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
 }

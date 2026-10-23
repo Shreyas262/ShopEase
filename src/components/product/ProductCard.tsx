@@ -1,5 +1,8 @@
 import { Link } from "react-router-dom";
 
+import { FaHeart, FaStar } from "react-icons/fa";
+import { FiHeart, FiShoppingCart } from "react-icons/fi";
+
 import {
   useAppDispatch,
   useAppSelector,
@@ -15,6 +18,7 @@ import {
   showSuccess,
   showInfo,
 } from "../../utils/toast";
+import { formatCategoryName } from "../../utils/formatCategoryName";
 
 import type { Product } from "../../types/product";
 
@@ -47,6 +51,8 @@ function ProductCard({
 
   const dispatch = useAppDispatch();
 
+  const productUrl = `/products/${product.id}`;
+
   const handleWishlistToggle = () => {
     if (isWishlisted) {
       dispatch(
@@ -65,79 +71,82 @@ function ProductCard({
     }
   };
 
-  if (variant === "compact") {
-    return (
-      <div className="product-card">
+  const handleAddToCart = () => {
+    dispatch(addToCart(product));
 
-        <div className="product-image">
-          <img
-            src={product.thumbnail}
-            alt={product.title}
-          />
-        </div>
-
-        <div className="product-content">
-          <h2 className="product-title">
-            {product.title}
-          </h2>
-
-          <p className="product-price">
-            ${product.price}
-          </p>
-        </div>
-
-        <div className="product-actions">
-          <Link
-            className="details-btn"
-            to={`/products/${product.id}`}
-          >
-            View Details
-          </Link>
-        </div>
-
-      </div>
+    showSuccess(
+      `${product.title} added to cart.`
     );
-  }
+  };
+
+  const isDetailed = variant === "detailed";
 
   return (
-    <div className="product-card">
+    <article className={`product-card product-card--${variant}`}>
 
       <div className="product-image">
+        <Link
+          to={productUrl}
+          tabIndex={-1}
+          aria-hidden="true"
+        >
+          <img
+            src={product.thumbnail}
+            alt=""
+            loading="lazy"
+          />
+        </Link>
 
-        <img
-          src={product.thumbnail}
-          alt={product.title}
-        />
-
-        {isAuthenticated && (
+        {isDetailed && isAuthenticated && (
           <button
             type="button"
-            className="wishlist-btn"
+            className={
+              isWishlisted
+                ? "wishlist-btn is-active"
+                : "wishlist-btn"
+            }
             onClick={handleWishlistToggle}
+            aria-pressed={isWishlisted}
+            aria-label={
+              isWishlisted
+                ? `Remove ${product.title} from wishlist`
+                : `Add ${product.title} to wishlist`
+            }
           >
-            {isWishlisted ? "❤️" : "🤍"}
+            {isWishlisted ? <FaHeart /> : <FiHeart />}
           </button>
         )}
-
       </div>
 
       <div className="product-content">
 
+        {isDetailed && (
+          <span className="product-category">
+            {formatCategoryName(product.category)}
+          </span>
+        )}
+
         <h2 className="product-title">
-          {product.title}
+          <Link to={productUrl}>
+            {product.title}
+          </Link>
         </h2>
 
-        <p className="product-category">
-          {product.category}
-        </p>
+        <div className="product-meta">
+          <p className="product-price">
+            ${product.price.toFixed(2)}
+          </p>
 
-        <p className="product-rating">
-          ⭐ {product.rating}
-        </p>
-
-        <p className="product-price">
-          ${product.price}
-        </p>
+          {isDetailed && (
+            <p
+              className="product-rating"
+              aria-label={`Rated ${product.rating.toFixed(1)} out of 5`}
+            >
+              <FaStar aria-hidden="true" />
+              {product.rating.toFixed(1)}
+            </p>
+          )}
+        </div>
 
       </div>
 
@@ -145,30 +154,26 @@ function ProductCard({
 
         <Link
           className="details-btn"
-          to={`/products/${product.id}`}
+          to={productUrl}
         >
           View Details
         </Link>
 
-        {isAuthenticated && (
+        {isDetailed && isAuthenticated && (
           <button
             type="button"
             className="cart-btn"
-            onClick={() => {
-              dispatch(addToCart(product));
-
-              showSuccess(
-                `${product.title} added to cart.`
-              );
-            }}
+            onClick={handleAddToCart}
+            aria-label={`Add ${product.title} to cart`}
           >
-            Add to Cart
+            <FiShoppingCart aria-hidden="true" />
+            <span>Add</span>
           </button>
         )}
 
       </div>
 
-    </div>
+    </article>
   );
 }
 
